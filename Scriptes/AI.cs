@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class AI : MonoBehaviour {
-	public Transform target;
-	public int moveSpeed;
-	private Transform myTransform;
-	private bool isFacingRight = false;
-	public float range;
+	public Transform target;// на кого агрится
+	public int moveSpeed; // скорость
+	private Transform myTransform; // расположение
+	private bool isFacingRight = false; // куда направлен
+	public float range; // дистанция агра
 	private Animator anim;
 	private bool isBlocked = false;
 	public LayerMask whatIsBlock;
