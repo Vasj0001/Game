@@ -107,6 +107,9 @@ public class HeroControllerScript : MonoBehaviour
 	private GameObject[] enemies;
 	private AI AIscript;
 	private Items ItemsScript;
+	public UIGrid weaponSlot;
+	private int lastWeaponDamage;
+	private Transform weapon;
 	private bool block=true;
 	
 	void Awake(){
@@ -121,6 +124,7 @@ public class HeroControllerScript : MonoBehaviour
 		transform.position = new Vector3(x,y,z);
 		Nick.text=PlayerName;
 		NickInv.text=PlayerName;
+		weapon = weaponSlot.GetChild(0);
 		
         anim = GetComponent<Animator>();
 		targets = new List<Transform>();
@@ -215,7 +219,8 @@ public class HeroControllerScript : MonoBehaviour
 
     private void Update()
     {	
-		//Debug.Log(weapon);
+		Debug.Log(weapon);
+		weaponSetup();	
 		TargetEnemy();
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
@@ -454,6 +459,18 @@ public class HeroControllerScript : MonoBehaviour
 	}
 	void unblockClick(){
 		block=false;
+	}
+	void weaponSetup(){
+		if(weaponSlot.GetChild(0)!=null && weaponSlot.GetChild(0)!=weapon){
+			weapon = weaponSlot.GetChild(0);
+			ItemsScript = (Items)weapon.GetComponent("Items");
+			lastWeaponDamage = ItemsScript.weaponDMG;
+			Damage+=lastWeaponDamage;
+			DamageWW.text = Damage.ToString();
+		}else if(weaponSlot.GetChild(0)==null){
+			Damage-=lastWeaponDamage;
+			DamageWW.text = Damage.ToString();
+		}
 	}
 	
 	void saving(){
