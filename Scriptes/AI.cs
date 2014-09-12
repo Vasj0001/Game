@@ -161,14 +161,23 @@ public class AI : MonoBehaviour {
 
 			if (Vector2.Distance(myTransform.position, mob.position)!=0 && Vector2.Distance(myTransform.position, mob.position)<=2)
 			{ 
-				if (((x1<x3)  && (x1<x2)) || ((x1>x3)  && (x1>x2)))
+				if ((x1<x3)  && (x1<x2)) 
 				{
 					myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
 				}
 
-				if (((y1<y3)  && (y1<y2)) || ((y1>y3)  && (y1>y2)))
+				if ((y1<y3)  && (y1<y2)) 
 				{
 					myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
+				}
+				if ((x1>x3)  && (x1>x2))
+				{
+					myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
+				}
+
+				if ((y1>y3)  && (y1>y2))
+				{
+					myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
 				}
 			}
 
