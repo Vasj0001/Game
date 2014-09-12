@@ -7,9 +7,10 @@ public class Items : MonoBehaviour {
 	private int _agility;
 	private int _intelligence;
 	private HeroControllerScript hcs;
+	private Transform Player;
 	
 	void Start(){
-		
+		hcs = Player.GetComponent<HeroControllerScript>();
 	}
 
 	public enum rarity{
