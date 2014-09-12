@@ -2,7 +2,15 @@
 using System.Collections;
 
 public class Items : MonoBehaviour {
-
+	private int _damage;
+	private int _vitality;
+	private int _agility;
+	private int _intelligence;
+	private HeroControllerScript hcs;
+	
+	void Start(){
+		
+	}
 
 	public enum rarity{
 		Common,
