@@ -217,6 +217,8 @@ public class HeroControllerScript : MonoBehaviour
     private void Update()
     {	
 		//Debug.Log(weapon);
+		if (Input.GetKey(KeyCode.F))
+			CurXP+=10;
 		TargetEnemy();
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
