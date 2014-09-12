@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class AI : MonoBehaviour {
-	public Transform target;// на кого агрится
-	public int moveSpeed; // скорость
-	private Transform myTransform; // расположение
-	private bool isFacingRight = false; // куда направлен
-	public float range; // дистанция агра
+	public Transform target;
+	public int moveSpeed;
+	private Transform myTransform;
+	private bool isFacingRight = false;
+	public float range;
 	private Animator anim;
 	private bool isBlocked = false;
 	public LayerMask whatIsBlock;
@@ -27,6 +27,9 @@ public class AI : MonoBehaviour {
 	public	GUISkin myBar;
 	public int height;
 	public int width;
+
+	private HeroControllerScript HS;
+	public List<Transform> moblist;
 	
 	// Use this for initialization
 	void Awake(){
@@ -34,6 +37,7 @@ public class AI : MonoBehaviour {
 	}
 	
 	void Start () {
+		HS = myTransform.GetComponent<HeroControllerScript>;
 		attackTimer = 0;
 		cd = 2.0f;
 		GameObject go = GameObject.FindGameObjectWithTag("Player");
@@ -133,4 +137,44 @@ public class AI : MonoBehaviour {
         //задаем новый размер персонажа, равный старому, но зеркально отраженный
         transform.localScale = theScale;
     }
+
+
+    public void Rogonov()
+    {
+    	private HeroControllerScript ;
+    	moblist=HS.targets;
+    	moblist.Remove(gameObject.name);
+
+    	float x1=myTransform.x;
+    	float y1=myTransform.y;
+ 
+     	float x2=target.x;
+     	float y2=target.y;
+ 
+ 		foreach(Transform mob in moblist)
+ 		{
+     		float x3=mob.x;
+    		float y3=mob.y;
+
+			if (x1*y2*1+x2*y3*1+x3*y1*1-x3*y2*1-x2*y1*1-x1*y3*1==0) and (Vector2.Distance(myTransform.position, target.position)<=2) and (x1<x3)
+			{ 
+				if y1==y2 
+				{
+					myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
+				}
+
+				if x1>=x2 
+				{
+					myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
+				}
+				else
+				{				
+					myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
+				}
+			}
+
+		}
+	}
+
+
 }
