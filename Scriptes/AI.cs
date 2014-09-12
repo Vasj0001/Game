@@ -101,10 +101,11 @@ public class AI : MonoBehaviour {
 				Damage();
 				attackTimer=cd;
 			}
+		}else{
+			Rogonov();
 		}
 		HPBarLeng = (float)CurHp/(float)MaxHp;
 		
-		Rogonov();
 	}
 	
 	void OnGUI(){
