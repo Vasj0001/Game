@@ -111,6 +111,8 @@ public class HeroControllerScript : MonoBehaviour
 	
 	void Awake(){
 		myPlayer = transform;
+		targets = new List<Transform>();
+		AddAllEnemies();
 	}
     /// <summary>
     /// Начальная инициализация
@@ -123,13 +125,12 @@ public class HeroControllerScript : MonoBehaviour
 		NickInv.text=PlayerName;
 		
         anim = GetComponent<Animator>();
-		targets = new List<Transform>();
+		
 		PointsL.text = Points.ToString();
 		DamageL.text = Damage.ToString();
 		VitalityL.text = Vitality.ToString();
 		AgilityL.text = Agility.ToString();
 		IntelligenceL.text = Intelligence.ToString();
-		AddAllEnemies();
     }
 
 	public void AddAllEnemies(){

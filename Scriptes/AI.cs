@@ -37,12 +37,12 @@ public class AI : MonoBehaviour {
 	}
 	
 	void Start () {
-		HS = myTransform.GetComponent<HeroControllerScript>;
 		attackTimer = 0;
 		cd = 2.0f;
 		GameObject go = GameObject.FindGameObjectWithTag("Player");
 		target = go.transform;
 		anim = GetComponent<Animator>();
+		HS = target.GetComponent<HeroControllerScript>();
 	}
 	
 	private void FixedUpdate(){
@@ -145,27 +145,27 @@ public class AI : MonoBehaviour {
     {
 
     	moblist=HS.targets;
-    	moblist.Remove(gameObject.name);
+    	//moblist.Remove(myTransform);
 
-    	float x1=myTransform.x;
-    	float y1=myTransform.y;
+    	float x1=myTransform.position.x;
+    	float y1=myTransform.position.y;
  
-     	float x2=target.x;
-     	float y2=target.y;
+     	float x2=target.position.x;
+     	float y2=target.position.y;
  
  		foreach(Transform mob in moblist)
  		{
-     		float x3=mob.x;
-    		float y3=mob.y;
+     		float x3=mob.position.x;
+    		float y3=mob.position.y;
 
-			if (x1*y2+x2*y3+x3*y1-x3*y2-x2*y1-x1*y3==0) and (Vector2.Distance(myTransform.position, target.position)<=2) and (x1<x3)
+			if (Vector2.Distance(myTransform.position, mob.position)!=0 && Vector2.Distance(myTransform.position, mob.position)<=2 && x1>x3)
 			{ 
-				if y1==y2 
+				if (y1==y2) 
 				{
 					myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
 				}
 
-				if x1>=x2 
+				if (x1>=x2) 
 				{
 					myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 				}
