@@ -141,7 +141,7 @@ public class AI : MonoBehaviour {
 
     public void Rogonov()
     {
-    	private HeroControllerScript ;
+
     	moblist=HS.targets;
     	moblist.Remove(gameObject.name);
 
