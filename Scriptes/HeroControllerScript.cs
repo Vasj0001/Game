@@ -100,6 +100,15 @@ public class HeroControllerScript : MonoBehaviour
 	private bool isFacingRightFirstSkill;
 	public GameObject fonFirstSkill;
 	public UILabel cdFirstSkillText;
+	//Second Skill
+	public float cdSecondSkill;
+	private float SecondSkillTimer;
+	public List<Transform> targetsInSecondSkill;
+	public List<Transform> targetsDamagedSecondSkill;
+	private float ttlSecondSkill=0.0f;
+	private bool isFacingRightSecondSkill;
+	public GameObject fonSecondSkill;
+	public UILabel cdSecondSkillText;
 	//
 	public Transform selectedTarget;
 	public GameObject expInfoPanel;
@@ -217,6 +226,8 @@ public class HeroControllerScript : MonoBehaviour
     private void Update()
     {	
 		//Debug.Log(weapon);
+		if (Input.GetKey(KeyCode.F))
+			CurXP+=10;
 		TargetEnemy();
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
@@ -227,6 +238,15 @@ public class HeroControllerScript : MonoBehaviour
 		if (firstSkillTimer<1){
 			firstSkillTimer=1;
 			NGUITools.SetActive(fonFirstSkill,false);
+		}
+		//
+		if (SecondSkillTimer>1){
+			SecondSkillTimer-=Time.deltaTime;
+			//cdSecondSkillText.text=(Mathf.Floor(SecondSkillTimer)).ToString();
+		}
+		if (SecondSkillTimer<1){
+			SecondSkillTimer=1;
+			//NGUITools.SetActive(fonSecondSkill,false);
 		}
 	
 		if (NGUITools.GetActive(openMenu)){
@@ -298,7 +318,42 @@ public class HeroControllerScript : MonoBehaviour
 			targetsDamagedFirstSkill.Clear();
 		}
 		//
-		
+		//Second Skill
+		if (Input.GetKeyDown(KeyCode.Alpha2) && SecondSkillTimer==1)
+		{
+			SecondSkillTimer=cdSecondSkill;
+			//NGUITools.SetActive(fonSecondSkill,true);
+			ttlSecondSkill=0.2f;
+			isFacingRightSecondSkill=isFacingRight;
+		}
+		if (ttlSecondSkill>=0)
+		{
+			if(isFacingRightSecondSkill)
+			{
+				myPlayer.transform.position += myPlayer.transform.right * maxSpeed * 8 * Time.deltaTime;
+			}
+			else
+			{
+				myPlayer.transform.position -= myPlayer.transform.right * maxSpeed * 8 * Time.deltaTime;
+			}
+			targetsInSecondSkill= targets.FindAll(bot => Mathf.Abs(bot.position.x-myPlayer.transform.position.x)<=1.0f && Mathf.Abs(bot.position.y-myPlayer.transform.position.y)<=0.6f);
+			foreach(Transform x in targetsInSecondSkill)
+			{
+				if(!targetsDamagedSecondSkill.Contains(x))
+				{
+					AIscript = (AI)x.GetComponent("AI");
+					AIscript.AddJustCurrHealth(-15);
+					targetsDamagedSecondSkill.Add(x);
+				}
+			}
+			ttlSecondSkill-=Time.deltaTime;
+		}
+		if (ttlSecondSkill<=0)
+		{
+			targetsDamagedSecondSkill.Clear();
+		}
+		//
+		//
 		if (Input.GetKeyDown(KeyCode.C) && countInv==0){
 			NGUITools.SetActive (inventory, true);
 			countInv=1;
@@ -507,60 +562,4 @@ public class HeroControllerScript : MonoBehaviour
 			Points = System.Convert.ToInt32(load.ReadLine());		
 		}	
 	}
-
-
-	//Second Skill
-	//Second Skill
-	public float cdSecondSkill;
-	private float SecondSkillTimer;
-	public List<Transform> targetsInSecondSkill;
-	public List<Transform> targetsDamagedSecondSkill;
-	private float ttlSecondSkill=0.0f;
-	private bool isFacingRightSecondSkill;
-	public GameObject fonSecondSkill;
-	public UILabel cdSecondSkillText;
-	//
-
-
-
-
-		if (Input.GetKeyDown(KeyCode.Alpha2) && SecondSkillTimer==1)
-		{
-			SecondSkillTimer=cdSecondSkill;
-			NGUITools.SetActive(fonSecondSkill,true);
-			ttlSecondSkill=1.0f;
-			isFacingRightSecondSkill=isFacingRight;
-		}
-		if (ttlSecondSkill>=0)
-		{
-			if(isFacingRightSecondSkill)
-			{
-				myPlayer.transform.position += myPlayer.transform.right * maxSpeed * 2 * Time.deltaTime;
-			}
-			else
-			{
-				myPlayer.transform.position -= myPlayer.transform.right * maxSpeed * 2 * Time.deltaTime;
-			}
-			targetsInSecondSkill= targets.FindAll(bot => Mathf.Abs(bot.position.x-myPlayer.transform.position.x)<=1.0f && Mathf.Abs(bot.position.y-myPlayer.transform.position.y)<=0.6f);
-			foreach(Transform x in targetsInSecondSkill)
-			{
-				if(!targetsDamagedSecondSkill.Contains(x))
-				{
-					AIscript = (AI)x.GetComponent("AI");
-					AIscript.AddJustCurrHealth(-15);
-					targetsDamagedSecondSkill.Add(x);
-				}
-			}
-			ttlSecondSkill-=Time.deltaTime;
-		}
-		if (ttlSecondSkill<=0)
-		{
-			targetsDamagedSecondSkill.Clear();
-		}
-		//
-
-
-
-
-
 }
