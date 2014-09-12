@@ -163,27 +163,27 @@ public class AI : MonoBehaviour {
 			{ 
 				if (isFacingRight)
 				{
-				if ((x1<x3)  && (x1<x2)) 
-				{
-					myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
-				}
+					if ((x1<x3)  && (x1<x2)) 
+					{
+						myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
+					}
 
-				if ((y1<y3)  && (y1<y2)) 
-				{
-					myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
-				}
+					if ((y1<y3)  && (y1<y2)) 
+					{
+						myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
+					}
 				}
 				else
 				{
-				if ((x1>x3)  && (x1>x2))
-				{
-					myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
-				}
+					if ((x1>x3)  && (x1>x2))
+					{
+						myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
+					}
 
-				if ((y1>y3)  && (y1>y2))
-				{
-					myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
-				}
+					if ((y1>y3)  && (y1>y2))
+					{
+						myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
+					}
 				}
 			}
 
