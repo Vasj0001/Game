@@ -103,6 +103,8 @@ public class AI : MonoBehaviour {
 			}
 		}
 		HPBarLeng = (float)CurHp/(float)MaxHp;
+		
+		Rogonov();
 	}
 	
 	void OnGUI(){
@@ -156,7 +158,7 @@ public class AI : MonoBehaviour {
      		float x3=mob.x;
     		float y3=mob.y;
 
-			if (x1*y2*1+x2*y3*1+x3*y1*1-x3*y2*1-x2*y1*1-x1*y3*1==0) and (Vector2.Distance(myTransform.position, target.position)<=2) and (x1<x3)
+			if (x1*y2+x2*y3+x3*y1-x3*y2-x2*y1-x1*y3==0) and (Vector2.Distance(myTransform.position, target.position)<=2) and (x1<x3)
 			{ 
 				if y1==y2 
 				{
