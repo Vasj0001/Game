@@ -8,9 +8,12 @@ public class Items : MonoBehaviour {
 	public int _intelligence;
 	private HeroControllerScript hcs;
 	private Transform Player;
+<<<<<<< HEAD
 	public Texture2D Icon;
 	public GameObject ItemObject;
 	private Inventory inv;
+=======
+>>>>>>> origin/master
 	
 	void Start(){
 		gameObject.name = gameObject.name.Replace("(Clone)", "");
