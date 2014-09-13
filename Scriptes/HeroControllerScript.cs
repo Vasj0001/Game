@@ -64,6 +64,7 @@ public class HeroControllerScript : MonoBehaviour
 	private int Agility;
 	private int Intelligence; // 0.2 регена МП
 	private int Points;
+	private int DamageWW;
 	
 	public UISlider XP;
 	public UILabel XpText;
@@ -78,7 +79,7 @@ public class HeroControllerScript : MonoBehaviour
 	public UILabel VitalityL;
 	public UILabel AgilityL;
 	public UILabel IntelligenceL;
-	public UILabel DamageWW;
+	public UILabel DamageWWL;
 	public UILabel HPReg;
 	public UILabel MPReg;
 	public UILabel MS;
@@ -89,6 +90,8 @@ public class HeroControllerScript : MonoBehaviour
 	private float attackTimer=0;
 	public List<Transform> targets;
 	public List<Transform> targetsInRange;
+	//Items
+	public int _damageW;
 	
 	//First Skill
 	public float cdFirstSkill;
@@ -225,7 +228,7 @@ public class HeroControllerScript : MonoBehaviour
 
     private void Update()
     {	
-		//Debug.Log(weapon);
+		//Debug.Log(_damageW);
 		if (Input.GetKey(KeyCode.F))
 			CurXP+=10;
 		TargetEnemy();
@@ -362,7 +365,7 @@ public class HeroControllerScript : MonoBehaviour
 			NGUITools.SetActive (inventory, false);
 			countInv=0;
 		}
-
+		//Stats
 		XP.sliderValue = (float)CurXP/(float)MaxXP;
 		XpText.text = CurXP.ToString()+"/"+MaxXP.ToString();		
 		HP.sliderValue = (float)CurHealth/(float)MaxHealth;
@@ -374,6 +377,9 @@ public class HeroControllerScript : MonoBehaviour
 		MS.text = maxSpeed.ToString();
 		HPReg.text = ((int)HealthReg).ToString();
 		MPReg.text = ((int)ManaReg).ToString();
+		DamageWW = Damage + _damageW;
+		DamageWWL.text = DamageWW.ToString();
+		
 		
 		if (CurXP>=MaxXP){
 			CurXP=CurXP-MaxXP;
@@ -411,6 +417,7 @@ public class HeroControllerScript : MonoBehaviour
 			}
 			TimerRegen=1.0f;
 		}
+		//
 		if (NGUITools.GetActive(expInfoPanel)){
 			expInfoLabel.text="To obtain level "+(LVL+1).ToString()+ " left "+ (MaxXP-CurXP).ToString() + "XP";
 			expInfoPanel.transform.localPosition=new Vector3(Input.mousePosition.x+80,Input.mousePosition.y-900,0);
@@ -493,7 +500,7 @@ public class HeroControllerScript : MonoBehaviour
 	void DamageAI(){
 		foreach(Transform x in targetsInRange){
 				AIscript = (AI)x.GetComponent("AI");
-				AIscript.AddJustCurrHealth(-Damage);
+				AIscript.AddJustCurrHealth(-DamageWW);
 		}
 	}
 	void expInfoT(){
