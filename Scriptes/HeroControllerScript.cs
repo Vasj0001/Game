@@ -63,6 +63,9 @@ public class HeroControllerScript : MonoBehaviour
 	private int Intelligence; // 0.2 регена МП
 	private int Points;
 	private int DamageWW;
+	private int VitalityTotal;
+	private int AgilityTotal;
+	private int IntelligenceTotal;
 	
 	public UISlider XP;
 	public UILabel XpText;
@@ -75,8 +78,11 @@ public class HeroControllerScript : MonoBehaviour
 	public UILabel PointsL;
 	public UILabel DamageL;
 	public UILabel VitalityL;
+	public UILabel _VitL;
 	public UILabel AgilityL;
+	public UILabel _AgL;
 	public UILabel IntelligenceL;
+	public UILabel _IntL;
 	public UILabel DamageWWL;
 	public UILabel HPReg;
 	public UILabel MPReg;
@@ -90,6 +96,9 @@ public class HeroControllerScript : MonoBehaviour
 	public List<Transform> targetsInRange;
 	//Items
 	public int _damageW;
+	public int _vitalityI;
+	public int _agilityI;
+	public int _intelligenceI;
 	
 	//First Skill
 	public float cdFirstSkill;
@@ -136,11 +145,6 @@ public class HeroControllerScript : MonoBehaviour
 		
         anim = GetComponent<Animator>();
 		
-		PointsL.text = Points.ToString();
-		DamageL.text = Damage.ToString();
-		VitalityL.text = Vitality.ToString();
-		AgilityL.text = Agility.ToString();
-		IntelligenceL.text = Intelligence.ToString();
     }
 
 	public void AddAllEnemies(){
@@ -362,6 +366,37 @@ public class HeroControllerScript : MonoBehaviour
 			NGUITools.SetActive (inventory, true);
 		}
 		//Stats
+		//Debug.Log(_VitL.color);
+		if(_vitalityI>0){
+			_VitL.color = new Color(0,1,0,1);
+		}else{
+			_VitL.color = new Color(1,1,1,1);
+		}
+		if(_agilityI>0){
+			_AgL.color = new Color(0,1,0,1);
+		}else{
+			_AgL.color = new Color(1,1,1,1);
+		}
+		if(_intelligenceI>0){
+			_IntL.color =new Color(0,1,0,1);
+		}else{
+			_IntL.color =new Color(1,1,1,1);
+		}
+		VitalityTotal=Vitality+_vitalityI;
+		AgilityTotal=Agility+_agilityI;
+		IntelligenceTotal=Intelligence+_intelligenceI;
+		VitalityL.text = Vitality.ToString();
+		AgilityL.text = Agility.ToString();
+		_VitL.text = _vitalityI.ToString();
+		_IntL.text = _intelligenceI.ToString();
+		_AgL.text = _agilityI.ToString();
+		MaxHealth = VitalityTotal*18;
+		MaxMana = IntelligenceTotal*16;
+		maxSpeed = 4.0f+AgilityTotal*0.05f;
+		maxSpeed = ((float)((int)(maxSpeed*100.0f))/100.0f);
+		HealthReg = Mathf.Floor(VitalityTotal/5.0f);
+		ManaReg = Mathf.Floor(IntelligenceTotal/5.0f);
+		IntelligenceL.text = Intelligence.ToString();
 		XP.sliderValue = (float)CurXP/(float)MaxXP;
 		XpText.text = CurXP.ToString()+"/"+MaxXP.ToString();		
 		HP.sliderValue = (float)CurHealth/(float)MaxHealth;
@@ -371,8 +406,8 @@ public class HeroControllerScript : MonoBehaviour
 		Level.text = LVL.ToString();
 		PointsL.text = Points.ToString();
 		MS.text = maxSpeed.ToString();
-		HPReg.text = ((int)HealthReg).ToString();
-		MPReg.text = ((int)ManaReg).ToString();
+		HPReg.text = ((int)HealthReg).ToString() + " hps";
+		MPReg.text = ((int)ManaReg).ToString() + " mps";
 		DamageWW = Damage + _damageW;
 		DamageWWL.text = DamageWW.ToString();
 		
@@ -459,8 +494,7 @@ public class HeroControllerScript : MonoBehaviour
 	void plusVit(){
 		if (Points>0){
 			Vitality+=1;
-			VitalityL.text = Vitality.ToString();
-			MaxHealth+=18;
+			//MaxHealth+=18;
 			HealthReg+=0.2f;
 			Points-=1;
 		}
@@ -468,8 +502,7 @@ public class HeroControllerScript : MonoBehaviour
 	void plusInt(){
 		if (Points>0){
 			Intelligence+=1;
-			IntelligenceL.text = Intelligence.ToString();
-			MaxMana+=16;
+			//MaxMana+=16;
 			ManaReg+=0.2f;
 			Points-=1;
 		}
@@ -477,9 +510,8 @@ public class HeroControllerScript : MonoBehaviour
 	void plusAgil(){
 		if (Points>0){
 			Agility+=1;
-			AgilityL.text = Agility.ToString();
-			maxSpeed+=0.05f;
-			maxSpeed = ((float)((int)(maxSpeed*100.0f))/100.0f);
+			//maxSpeed+=0.05f;
+			//maxSpeed = ((float)((int)(maxSpeed*100.0f))/100.0f);
 			Points-=1;
 		}	
 	}

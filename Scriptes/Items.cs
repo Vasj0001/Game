@@ -16,6 +16,7 @@ public class Items : MonoBehaviour {
 	public string Sname;
 	public type TypeItem;
 	public rarity RarityItem;
+	private bool state = false;
 	
 	void Start(){
 		gameObject.name = gameObject.name.Replace("(Clone)", "");
@@ -23,7 +24,12 @@ public class Items : MonoBehaviour {
 		hcs = Player.GetComponent<HeroControllerScript>();
 		inv = Player.GetComponent<Inventory>();
 		ItemObject = Resources.Load(gameObject.name) as GameObject;
-		inv.all_items[0] = ItemObject;
+		for (int i=0; i<=3; i++) {
+			if ((inv.all_items[i] == null) && (state == false)) {
+				inv.all_items[i] = ItemObject;
+				state = true;
+			}
+		}
 	}
 
 	public enum rarity{
@@ -36,7 +42,10 @@ public class Items : MonoBehaviour {
 	public enum type{
 		Weapon,
 		Left_Hand,
-		Armor,
+		Body,
+		Head,
+		Boots,
+		Hands,
 		Ring,
 		Amulet,
 		Potion,

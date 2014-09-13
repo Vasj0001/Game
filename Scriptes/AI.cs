@@ -56,7 +56,7 @@ public class AI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//testRect = new Rect(0,Screen.height/8.0f,Screen.width/6.4f,Screen.height-(Screen.height/8.0f+Screen.height/3.13f));
+		//testRect = new Rect(Screen.width/64.0f, Screen.height/3.763f,Screen.width-(Screen.width/64.0f+Screen.width/1.044f),Screen.height-(Screen.height/3.763f+Screen.height/1.457f));
 		Debug.DrawLine(target.position, myTransform.position);
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
@@ -165,17 +165,19 @@ public class AI : MonoBehaviour {
 			if (x1<x2)
 			{
 				myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
-			}
-			else
-			{
-				myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
+				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 			}
 
+			if (x1>x2)
+			{
+				myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
+				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
+			}
 			if (y1>y2)
 			{
 				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
 			}
-			else
+			if (y1<y2)
 			{
 				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 			}
