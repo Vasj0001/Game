@@ -8,7 +8,6 @@ public class Items : MonoBehaviour {
 	private int _intelligence;
 	private HeroControllerScript hcs;
 	private Transform Player;
-	public Texture2D Icon;
 	
 	void Start(){
 		hcs = Player.GetComponent<HeroControllerScript>();
