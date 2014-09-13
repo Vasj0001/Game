@@ -76,7 +76,7 @@ public class AI : MonoBehaviour {
 			//Debug.Log(Vector3.Distance(myTransform.position,target.position));
 
 
-				AIWalk(false);
+				AIWalk(Stena());
 
 			
 		}
