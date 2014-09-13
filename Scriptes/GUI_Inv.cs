@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GUI_Inv : MonoBehaviour {
 	
-<<<<<<< HEAD
 	private Rect[] rect = new Rect[24];
 	private int mouseAtSlot;
 	private int stats;
@@ -62,13 +61,5 @@ public class GUI_Inv : MonoBehaviour {
 	}
 	void out20(){
 		mouseAtSlot=40;
-=======
-	private Rect[] rect = new Rect[10];
-	void Start(){
-	
-	}
-	void Update(){
-		rect[0] = new Rect (29,552,51,51);
->>>>>>> origin/master
 	}
 }
