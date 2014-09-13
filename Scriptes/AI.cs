@@ -162,7 +162,7 @@ public class AI : MonoBehaviour {
      		float x3=mob.position.x;
     		float y3=mob.position.y;
 
-			if (Vector2.Distance(myTransform.position, mob.position)!=0 && Vector2.Distance(myTransform.position, mob.position)<=2 && (x1*y2*1+x2*y3*1+x3*y1*1-x3*y2*1-x2*y1*1-x1*y3*1==0))
+			if (Vector2.Distance(myTransform.position, mob.position)!=0 && Vector2.Distance(myTransform.position, mob.position)<=2)
 			{ 
 				if (isFacingRight)
 				{
