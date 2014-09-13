@@ -165,19 +165,17 @@ public class AI : MonoBehaviour {
 			if (x1<x2)
 			{
 				myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
-				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 			}
-
-			if (x1>x2)
+			else
 			{
 				myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
-				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
 			}
+
 			if (y1>y2)
 			{
 				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
 			}
-			if (y1<y2)
+			else
 			{
 				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 			}
