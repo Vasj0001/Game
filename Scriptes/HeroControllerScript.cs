@@ -32,7 +32,6 @@ public class HeroControllerScript : MonoBehaviour
 		
 	int attackHash = Animator.StringToHash("Attack_War");
 	
-	private int countInv=1;
 	public GameObject inventory;
 	public GameObject LevelUp;
 	public GameObject LevelUpSe;
@@ -56,7 +55,6 @@ public class HeroControllerScript : MonoBehaviour
 	private float TimerLevel=3.0f;
 	private float TimerRegen=1.0f;
 	private bool done=false;
-	private int count=0;
 	private string PlayerName;
 	
 	private int Damage;
@@ -357,13 +355,11 @@ public class HeroControllerScript : MonoBehaviour
 		}
 		//
 		//
-		if (Input.GetKeyDown(KeyCode.C) && countInv==0){
-			NGUITools.SetActive (inventory, true);
-			countInv=1;
-		}
-		else if (Input.GetKeyDown(KeyCode.C) && countInv==1){
+		if (Input.GetKeyDown(KeyCode.C) && NGUITools.GetActive(inventory) && myPlayer.GetComponent<GUI_Inv>().stats == 40){
 			NGUITools.SetActive (inventory, false);
-			countInv=0;
+		}
+		else if(Input.GetKeyDown(KeyCode.C) && !NGUITools.GetActive(inventory)){
+			NGUITools.SetActive (inventory, true);
 		}
 		//Stats
 		XP.sliderValue = (float)CurXP/(float)MaxXP;
@@ -454,14 +450,10 @@ public class HeroControllerScript : MonoBehaviour
 		NGUITools.SetActive (openMenu, false);
 	}
 	void stats(){
-		if (count==0){
-			NGUITools.SetActive (statsMenu, true);
-			count=1;
-		}
-		else
-		{
+		if (NGUITools.GetActive (statsMenu)){
 			NGUITools.SetActive (statsMenu, false);
-			count=0;
+		}else{
+			NGUITools.SetActive (statsMenu, true);
 		}
 	}
 	void plusVit(){

@@ -3,14 +3,19 @@ using System.Collections;
 
 public class Items : MonoBehaviour {
 	public int _damage;
+	public int _protection;
 	public int _vitality;
 	public int _agility;
 	public int _intelligence;
+	public float _attackSpeed;
 	private HeroControllerScript hcs;
 	private Transform Player;
 	public Texture2D Icon;
 	public GameObject ItemObject;
 	private Inventory inv;
+	public string Sname;
+	public type TypeItem;
+	public rarity RarityItem;
 	
 	void Start(){
 		gameObject.name = gameObject.name.Replace("(Clone)", "");
