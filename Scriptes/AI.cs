@@ -70,26 +70,18 @@ public class AI : MonoBehaviour {
 			myTransform.position = new Vector3(myTransform.position.x,myTransform.position.y, -1);
 		}
 		
-		if (Vector2.Distance(myTransform.position,target.position) < range && ((float)((int)(Vector2.Distance(myTransform.position,target.position)*10.0f))/10.0f > 1.2f)){
+		if (Vector2.Distance(myTransform.position,target.position) < range && ((float)((int)(Vector2.Distance(myTransform.position,target.position)*10.0f))/10.0f > 1.2f))
+		{
 			anim.SetBool("Walk", true);
 			//Debug.Log(Vector3.Distance(myTransform.position,target.position));
-			if (myTransform.position.x>=target.position.x){
-				if (isFacingRight){
-					Flip();
-				}
-				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
-			}else{
-				if (!isFacingRight){
-					Flip();
-				}
-				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;		
-			}
-			if (myTransform.position.y-target.position.y>0.66f){
-				myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
-			}else if (target.position.y - myTransform.position.y>0.66f){
-				myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;		
-			}			
-		}else{
+
+
+				AIWalk(false);
+
+			
+		}
+		else
+		{
 			anim.SetBool("Walk", false);
 		}
 		//if (isBlocked){
@@ -103,8 +95,6 @@ public class AI : MonoBehaviour {
 				Damage();
 				attackTimer=cd;
 			}
-		}else{
-			Rogonov();
 		}
 		HPBarLeng = (float)CurHp/(float)MaxHp;
 		
@@ -145,10 +135,25 @@ public class AI : MonoBehaviour {
     }
 
 
+
+	public bool Stena()
+    {	
+    	bool stena=false;
+    	moblist=HS.targets;
+    	foreach(Transform mob in moblist)
+ 		{
+ 			if (Vector2.Distance(myTransform.position, mob.position)!=0 && Vector2.Distance(myTransform.position, mob.position)<=2)
+ 			{
+ 				stena=true;
+ 			}
+ 		}
+ 		return stena;
+    }
+
     public void Rogonov()
     {
 
-    	moblist=HS.targets;
+    	
     	//moblist.Remove(myTransform);
 
     	float x1=myTransform.position.x;
@@ -156,42 +161,66 @@ public class AI : MonoBehaviour {
  
      	float x2=target.position.x;
      	float y2=target.position.y;
- 
- 		foreach(Transform mob in moblist)
- 		{
-     		float x3=mob.position.x;
-    		float y3=mob.position.y;
 
-			if (Vector2.Distance(myTransform.position, mob.position)!=0 && Vector2.Distance(myTransform.position, mob.position)<=2 && (x1*y2*1+x2*y3*1+x3*y1*1-x3*y2*1-x2*y1*1-x1*y3*1==0))
-			{ 
-				if (isFacingRight)
-				{
-					if ((x1<x3)  && (x1<x2)) 
-					{
-						myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
-					}
-
-					if (((y1<y3)  && (y1<y2)) || (Mathf.Abs(x1-x3)<=0.5f))
-					{
-						myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
-					}
-				}
-				else
-				{
-					if ((x1>x3)  && (x1>x2))
-					{
-						myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
-					}
-
-					if (((y1>y3)  && (y1>y2)) || (Mathf.Abs(x1-x3)<=0.5f))
-					{
-						myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
-					}
-				}
+			if (x1<x2)
+			{
+				myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
+				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 			}
 
+			if (x1>x2)
+			{
+				myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
+				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
+			}
+			if (y1>y2)
+			{
+				myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
+			}
+			if (y1<y2)
+			{
+				myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
+			}
+	}
+	public void Dviz()
+	{	
+		if (myTransform.position.x>=target.position.x)
+		{
+			if (isFacingRight)
+			{
+				Flip();
+			}
+			myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 		}
+		else
+		{
+			if (!isFacingRight)
+			{
+				Flip();
+			}
+			myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;		
+		}
+		if (myTransform.position.y-target.position.y>0.66f)
+		{				
+			myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
+		}
+		else if (target.position.y - myTransform.position.y>0.66f)
+		{
+			myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;		
+		}			
 	}
 
+	public void AIWalk(bool stenaf)
+    {
+    	bool stena=stenaf;
+    	if(stena)
+    	{
+    		Rogonov();
+    	}
+    	else
+    	{
+    		Dviz();
+    	}
+    }
 
 }
