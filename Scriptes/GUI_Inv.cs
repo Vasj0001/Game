@@ -8,6 +8,6 @@ public class GUI_Inv : MonoBehaviour {
 	
 	}
 	void Update(){
-		rect[0] = new Rect (29,552,51,51)
+		rect[0] = new Rect (29,552,51,51);
 	}
 }

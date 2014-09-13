@@ -27,6 +27,7 @@ public class AI : MonoBehaviour {
 	public	GUISkin myBar;
 	public int height;
 	public int width;
+	//private Rect testRect;
 
 	private HeroControllerScript HS;
 	public List<Transform> moblist;
@@ -55,6 +56,7 @@ public class AI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//testRect = new Rect(0,Screen.height/8.0f,Screen.width/6.4f,Screen.height-(Screen.height/8.0f+Screen.height/3.13f));
 		Debug.DrawLine(target.position, myTransform.position);
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
@@ -115,6 +117,7 @@ public class AI : MonoBehaviour {
 		GUI.Box(new Rect(screenPosition.x - width, Screen.height - screenPosition.y - height, 60f*HPBarLeng, 15f), " ", GUI.skin.GetStyle("fon")); 
 		GUI.TextField(position, CurHp + "/" + MaxHp, 20);
 		GUI.Box(position, " ", GUI.skin.GetStyle("Bar"));
+		//GUI.Box(testRect, "");
 	}
 	
 	void Damage(){
@@ -168,7 +171,7 @@ public class AI : MonoBehaviour {
 						myTransform.position += myTransform.up * moveSpeed * Time.deltaTime;
 					}
 
-					if (((y1<y3)  && (y1<y2)) || (y1==y2))
+					if (((y1<y3)  && (y1<y2)) || (Mathf.Abs(x1-x3)<=0.5f))
 					{
 						myTransform.position += myTransform.right * moveSpeed * Time.deltaTime;
 					}
@@ -180,7 +183,7 @@ public class AI : MonoBehaviour {
 						myTransform.position -= myTransform.up * moveSpeed * Time.deltaTime;
 					}
 
-					if (((y1>y3)  && (y1>y2)) || (y1==y2))
+					if (((y1>y3)  && (y1>y2)) || (Mathf.Abs(x1-x3)<=0.5f))
 					{
 						myTransform.position -= myTransform.right * moveSpeed * Time.deltaTime;
 					}
