@@ -27,6 +27,10 @@ public class AI : MonoBehaviour {
 	public	GUISkin myBar;
 	public int height;
 	public int width;
+	public bool life=true;
+	private float timerLife=0;
+	private float timerDeath=0;
+	private bool check=true;
 	//private Rect testRect;
 
 	private HeroControllerScript HS;
@@ -60,44 +64,57 @@ public class AI : MonoBehaviour {
 		Debug.DrawLine(target.position, myTransform.position);
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
-		if (CurHp<=0){
-			myTransform.position = new Vector3(8,-3,0);
-		}
+		if (timerLife>0)
+			timerLife-=Time.deltaTime;
+		if (timerLife<0){timerLife=0;}
+		if (timerDeath>0){timerDeath-=Time.deltaTime;}
+		if (timerDeath<0){timerDeath=0;}
 		
 		if (myTransform.position.y>target.position.y){
 			myTransform.position = new Vector3(myTransform.position.x,myTransform.position.y, 1);
 		}else{
 			myTransform.position = new Vector3(myTransform.position.x,myTransform.position.y, -1);
 		}
-		
-		if (Vector2.Distance(myTransform.position,target.position) < range && ((float)((int)(Vector2.Distance(myTransform.position,target.position)*10.0f))/10.0f > 1.2f))
-		{
-			anim.SetBool("Walk", true);
-			//Debug.Log(Vector3.Distance(myTransform.position,target.position));
+		if (CurHp>0){
+			if (Vector2.Distance(myTransform.position,target.position) < range && ((float)((int)(Vector2.Distance(myTransform.position,target.position)*10.0f))/10.0f > 1.2f))
+			{
+				anim.SetBool("Walk", true);
+				//Debug.Log(Vector3.Distance(myTransform.position,target.position));
 
 
 				AIWalk(Stena());
 
 			
-		}
-		else
-		{
-			anim.SetBool("Walk", false);
-		}
-		//if (isBlocked){
-		//	anim.SetBool("Block", false);
-		//	isBlocked=false;
-		//	rigidbody2D.AddForce(new Vector2(0, 150));
-		//}
-		if (Vector2.Distance(myTransform.position,target.position) <= 1.3f){
-			anim.SetBool("Walk", false);
-			if (attackTimer==0){
-				Damage();
-				attackTimer=cd;
 			}
+			else
+			{
+				anim.SetBool("Walk", false);
+			}
+			//if (isBlocked){
+			//	anim.SetBool("Block", false);
+			//	isBlocked=false;
+			//	rigidbody2D.AddForce(new Vector2(0, 150));
+			//}
+			if (Vector2.Distance(myTransform.position,target.position) <= 1.3f){
+				anim.SetBool("Walk", false);
+				if (attackTimer==0){
+					Damage();
+					attackTimer=cd;
+				}
+			}
+		}else{
+			anim.SetBool("Walk", false);
+			if (check){
+				timerDeath=1.0f;
+				timerLife=0.2f;
+				check=false;
+			}
+			if(timerLife==0)
+				life=false;
+			if (timerDeath==0)
+				gameObject.SetActive(false);			
 		}
-		HPBarLeng = (float)CurHp/(float)MaxHp;
-		
+		HPBarLeng = (float)CurHp/(float)MaxHp;	
 	}
 	
 	void OnGUI(){

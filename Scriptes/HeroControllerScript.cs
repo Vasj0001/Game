@@ -38,10 +38,10 @@ public class HeroControllerScript : MonoBehaviour
 	public GameObject statsMenu;
 	public GameObject openMenu;
 	
-	private int LVL;
+	public int LVL;
 	private string Class;
-	private int MaxXP;
-	private int CurXP;
+	public int MaxXP;
+	public int CurXP;
 	private int MaxHealth; // Максимальное количество здоровья
 	private int CurHealth; // Текущее количество здоровья
 	private int MaxMana; // Максимально количество маны
@@ -121,8 +121,6 @@ public class HeroControllerScript : MonoBehaviour
 	public UILabel cdSecondSkillText;
 	//
 	public Transform selectedTarget;
-	public GameObject expInfoPanel;
-	public UILabel expInfoLabel;
 	private GameObject[] enemies;
 	private AI AIscript;
 	private Items ItemsScript;
@@ -449,10 +447,6 @@ public class HeroControllerScript : MonoBehaviour
 			TimerRegen=1.0f;
 		}
 		//
-		if (NGUITools.GetActive(expInfoPanel)){
-			expInfoLabel.text="To obtain level "+(LVL+1).ToString()+ " left "+ (MaxXP-CurXP).ToString() + "XP";
-			expInfoPanel.transform.localPosition=new Vector3(Input.mousePosition.x+80,Input.mousePosition.y-900,0);
-		}
 		targetsInRange = targets.FindAll(bot =>((isFacingRight && Mathf.Abs(myPlayer.position.y-bot.position.y)<=1.2f && myPlayer.transform.position.x<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x+2.0f) || (!isFacingRight && myPlayer.transform.position.x-2.0f<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x)));
     }
 
@@ -526,14 +520,6 @@ public class HeroControllerScript : MonoBehaviour
 				AIscript = (AI)x.GetComponent("AI");
 				AIscript.AddJustCurrHealth(-DamageWW);
 		}
-	}
-	void expInfoT(){
-//		Debug.Log(Input.mousePosition);
-//		Debug.Log(expInfoPanel.transform.localPosition);
-		NGUITools.SetActive(expInfoPanel,true);
-	}
-	void expInfoF(){
-		NGUITools.SetActive(expInfoPanel,false);
 	}
 	
 	void blockClick(){

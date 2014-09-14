@@ -16,18 +16,30 @@ public class Items : MonoBehaviour {
 	public string Sname;
 	public type TypeItem;
 	public rarity RarityItem;
-	private bool state = false;
+	public bool state = false;
 	
-	void Start(){
+	void Awake(){
 		gameObject.name = gameObject.name.Replace("(Clone)", "");
 		Player = GameObject.FindWithTag("Player").transform;
 		hcs = Player.GetComponent<HeroControllerScript>();
 		inv = Player.GetComponent<Inventory>();
 		ItemObject = Resources.Load(gameObject.name) as GameObject;
-		for (int i=0; i<=3; i++) {
-			if ((inv.all_items[i] == null) && (state == false)) {
-				inv.all_items[i] = ItemObject;
-				state = true;
+	}
+	void Start(){
+		
+	}
+	void Update(){
+		if (Vector2.Distance(Player.position, transform.position)<=1.0f){
+			for (int i=0; i<=3; i++) {
+				if ((inv.all_items[i] == null) && (state == false)) {
+					inv.all_items[i] = ItemObject;
+					state = true;
+				}
+			}
+			if (state) {
+				Destroy(gameObject);
+			} else {
+				Debug.Log("Max inv");
 			}
 		}
 	}

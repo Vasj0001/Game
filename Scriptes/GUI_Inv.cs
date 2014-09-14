@@ -5,8 +5,9 @@ using System.Collections.Generic;
 public class GUI_Inv : MonoBehaviour {
 	public GUISkin mySkin;
 	
-	private Rect[] rect = new Rect[24];
-	private int mouseAtSlot;
+	private Rect[] rect = new Rect[25];
+	public int mouseAtSlot;
+	private bool mouseAtInv=false;
 	public int stats;
 	private Inventory inv;
 	private Rect curs;
@@ -18,10 +19,13 @@ public class GUI_Inv : MonoBehaviour {
 	private int countV;
 	private int countAg;
 	private int countInt;
+	public int start;
 	
+	void Awake(){
+		start=2;
+	}
 	void Start(){
 		stats = 40;
-		mouseAtSlot = 40;
 		inv = gameObject.GetComponent<Inventory>();
 		eqStats = new List<Rect>();
 	}
@@ -32,16 +36,11 @@ public class GUI_Inv : MonoBehaviour {
 		rect[1] = new Rect(Screen.width/21.210f, Screen.height/2.27f,Screen.width-(Screen.width/21.210f+Screen.width/1.082f),Screen.height-(Screen.height/2.27f+Screen.height/1.97f));
 		rect[2] = new Rect(Screen.width/12.229f, Screen.height/2.27f,Screen.width-(Screen.width/12.229f+Screen.width/1.122f),Screen.height-(Screen.height/2.27f+Screen.height/1.97f));
 		rect[3] = new Rect(Screen.width/8.727f, Screen.height/2.27f,Screen.width-(Screen.width/8.727f+Screen.width/1.165f),Screen.height-(Screen.height/2.27f+Screen.height/1.97f));
-		//17 18 19 20 21 22 23 24 +8reserv
+		//17 18 19 20 21 22 23 24
 		rect[18] = new Rect(Screen.width/64.0f, Screen.height/3.763f,Screen.width-(Screen.width/64.0f+Screen.width/1.044f),Screen.height-(Screen.height/3.763f+Screen.height/1.457f));
 		rect[20] = new Rect(Screen.width/21.0f,Screen.height/3.121f,Screen.width-(Screen.width/21.0f+Screen.width/1.082f),Screen.height-(Screen.height/3.121f+Screen.height/1.584f));
 		
 		if(NGUITools.GetActive(gameObject.GetComponent<HeroControllerScript>().inventory)) {
-			//Proverka!
-			if (Input.GetMouseButtonUp(0) && stats>=17 && stats<=24){
-				if (inv.all_items[mouseAtSlot]==null && (inv.stats18==false || inv.stats20==false))
-					inv.all_items[stats+8]=null;
-			}
 			//0
 			if (mouseAtSlot==0 && Input.GetMouseButton(0)){
 				if(stats == 40)
@@ -98,10 +97,15 @@ public class GUI_Inv : MonoBehaviour {
 			if (mouseAtSlot==18 && Input.GetMouseButtonUp(0)){
 				if(stats != 40 && stats!=18 && inv.all_items[18] == null && inv.all_items[stats].GetComponent<Items>().TypeItem == Items.type.Body){
 					inv.all_items[18] = inv.all_items[stats];
-					inv.all_items[26] = inv.all_items[stats];
 					inv.all_items[stats] = null;
 					stats = 40;
 				}else stats = 40; 
+			}
+			if(inv.all_items[18]!=null){
+				inv.all_items[26]=inv.all_items[18];
+			}else{
+				if (inv.all_items[26]!=null && inv.stats18==false)
+					inv.all_items[26]=null;
 			}
 			//20
 			if (mouseAtSlot==20 && Input.GetMouseButton(0)){
@@ -111,12 +115,44 @@ public class GUI_Inv : MonoBehaviour {
 			if (mouseAtSlot==20 && Input.GetMouseButtonUp(0)){
 				if(stats != 40 && stats!=20 && inv.all_items[20] == null && inv.all_items[stats].GetComponent<Items>().TypeItem == Items.type.Weapon){
 					inv.all_items[20] = inv.all_items[stats];
-					inv.all_items[28] = inv.all_items[stats];
 					inv.all_items[stats] = null;
 					stats = 40;
 				}else stats = 40; 
 			}
-		}
+			if(inv.all_items[20]!=null){
+				inv.all_items[28]=inv.all_items[20];
+			}else{
+				if (inv.all_items[28]!=null && inv.stats20==false)
+					inv.all_items[28]=null;
+			}
+		}/*
+		if(mouseAtSlot!=40 && Input.GetMouseButtonDown(1) && inv.all_items[mouseAtSlot]!=null){
+			if(inv.all_items[mouseAtSlot].GetComponent<Items>().TypeItem == Items.type.Weapon){
+				if(inv.all_items[20]==null){
+					inv.all_items[20]=inv.all_items[mouseAtSlot];
+					inv.all_items[mouseAtSlot]=null;
+				}else{
+					inv.all_items[25]=inv.all_items[20];
+					inv.all_items[20]=null;
+					inv.all_items[20]=inv.all_items[mouseAtSlot];
+					inv.all_items[mouseAtSlot]=inv.all_items[25];
+					inv.all_items[25]=null;
+				}
+			}
+			if(inv.all_items[mouseAtSlot].GetComponent<Items>().TypeItem == Items.type.Body){
+				if(inv.all_items[18]==null){
+					inv.all_items[18]=inv.all_items[mouseAtSlot];
+					inv.all_items[mouseAtSlot]=null;
+				}else{
+					start=1;
+					inv.all_items[25]=inv.all_items[18];
+					inv.all_items[18]=null;
+					inv.all_items[18]=inv.all_items[mouseAtSlot];
+					inv.all_items[mouseAtSlot]=inv.all_items[25];
+					inv.all_items[25]=null;
+				}
+			}
+		}*/
 		//
 		if (mouseAtSlot!=40 && inv.all_items[mouseAtSlot]!=null && stats == 40){
 			if(eqStats.Count!=0){
@@ -183,7 +219,15 @@ public class GUI_Inv : MonoBehaviour {
 			isAg=0;
 			isInt=0;
 		}
-
+		if(atInv()==false)
+			mouseAtSlot=40;
+		mouseAtInv=atInv();
+		if(Input.GetMouseButtonUp(0) && !mouseAtInv && stats!=40){
+			Debug.Log("Complete");
+			Instantiate(Resources.Load(inv.all_items[stats].name), transform.position + new Vector3(1, -1, 0), Quaternion.Euler (0, 0, 0));
+			inv.all_items[stats] = null;
+			stats = 40;
+		}
 	}
 	void OnGUI(){
 		GUI.skin = mySkin;
@@ -201,7 +245,7 @@ public class GUI_Inv : MonoBehaviour {
 			}
 			
 			//Подсказки итемов
-			if (inv.all_items[mouseAtSlot]!=null && stats == 40){
+			if (inv.all_items[mouseAtSlot]!=null && stats == 40 && mouseAtInv){
 				if(eqStats.Count<=5){
 					GUI.Box(new Rect(Input.mousePosition.x+25,Screen.height - Input.mousePosition.y+10,200,300), "");
 				}else{
@@ -269,5 +313,8 @@ public class GUI_Inv : MonoBehaviour {
 	}
 	void out0(){
 		mouseAtSlot=40;
+	}
+	bool atInv(){
+		return NGUITools.GetActive(gameObject.GetComponent<HeroControllerScript>().inventory) && Input.mousePosition.x>=0.0f && Input.mousePosition.x<=Screen.width-Screen.width/1.207f && Input.mousePosition.y<=Screen.height-Screen.height/8.0f && Input.mousePosition.y>=Screen.height/3.13f;
 	}
 }
