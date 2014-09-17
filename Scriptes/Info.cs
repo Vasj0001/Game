@@ -8,6 +8,7 @@ public class Info : MonoBehaviour {
 	public GUISkin infoSkin;
 	public int gold=0;
 	public float timer=0;
+	private bool audioCheck=false;
 	
 	void Start(){
 		hcs = gameObject.GetComponent<HeroControllerScript>();
@@ -15,7 +16,10 @@ public class Info : MonoBehaviour {
 	void Update(){
 		if (timer>0)timer-=Time.deltaTime;
 		if (timer<0)timer = 0;
-		if (timer==0) gold=0;
+		if (timer==0){
+			audioCheck=false;
+			gold=0;
+		}
 	}
 	void OnGUI(){
 		GUI.skin = mySkin;
@@ -31,6 +35,10 @@ public class Info : MonoBehaviour {
 			GUI.contentColor = Color.yellow;
 			GUI.Label(new Rect(Screen.width/2.4f,Screen.height/7.2f,500,150), "You pick up " + gold.ToString() + " gold!");
 			GUI.contentColor = Color.white;
+		}
+		if(gold!=0 && !audioCheck){
+			audio.PlayOneShot(gameObject.GetComponent<Sounds>().pickGold,1.0f);
+			audioCheck=true;
 		}
 	}
 	void atExp(){

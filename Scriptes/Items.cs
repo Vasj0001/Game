@@ -18,7 +18,7 @@ public class Items : MonoBehaviour {
 	public type TypeItem;
 	public rarity RarityItem;
 	public bool state = false;
-	public int _price=0;
+	public int _price;
 	
 	void Awake(){
 		gameObject.name = gameObject.name.Replace("(Clone)", "");

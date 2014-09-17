@@ -16,10 +16,12 @@ public class NPC : MonoBehaviour {
 			Npc1.transform.position = new Vector3(Npc1.transform.position.x,Npc1.transform.position.y, -1);
 		}
 		if(Vector2.Distance(Player.transform.position,Npc1.transform.position)<=1.2f && Input.GetKeyDown(KeyCode.E)){
+			NGUITools.SetActive(gameObject.GetComponent<HeroControllerScript>().inventory,true);
 			NGUITools.SetActive(gameObject.GetComponent<Shops>().shop,true);
 		}
 		if(Vector2.Distance(Player.transform.position,Npc1.transform.position)>1.2f){
 			NGUITools.SetActive(gameObject.GetComponent<Shops>().shop,false);
+			NGUITools.SetActive(gameObject.GetComponent<Shops>().sellMenu,false);
 		}
 	}
 	void OnGUI(){

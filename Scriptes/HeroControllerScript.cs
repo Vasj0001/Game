@@ -131,6 +131,8 @@ public class HeroControllerScript : MonoBehaviour
 	public bool menuCheck=false;
 	public GameObject rightPartSys;
 	public GameObject leftPartSys;
+	//Sounds
+	private bool checkAudio=false;
 	
 	void Awake(){
 		myPlayer = transform;
@@ -234,6 +236,7 @@ public class HeroControllerScript : MonoBehaviour
 
     private void Update()
     {	
+		targetsInRange = targets.FindAll(bot =>((isFacingRight && Mathf.Abs(myPlayer.position.y-bot.position.y)<=1.2f && myPlayer.transform.position.x<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x+2.0f) || (!isFacingRight && myPlayer.transform.position.x-2.0f<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x)));
 		//Debug.Log(_damageW);
 		if (Input.GetKey(KeyCode.F))
 			CurXP+=10;
@@ -246,8 +249,10 @@ public class HeroControllerScript : MonoBehaviour
 		if (attackTimer<0){attackTimer=0;}
 		if (menuTimer>0){menuTimer-=Time.deltaTime;}
 		if (menuTimer<0){menuTimer=0;}
-		if (menuTimer==0 && menuCheck)
+		if (menuTimer==0 && menuCheck){
 			NGUITools.SetActive (statsMenu, false);
+			checkAudio=false;
+		}
 			
 		if (firstSkillTimer>1){
 			firstSkillTimer-=Time.deltaTime;
@@ -385,8 +390,9 @@ public class HeroControllerScript : MonoBehaviour
 		}
 		//
 		//
-		if (Input.GetKeyDown(KeyCode.C) && NGUITools.GetActive(inventory) && myPlayer.GetComponent<GUI_Inv>().stats == 40){
+		if (Input.GetKeyDown(KeyCode.C) && NGUITools.GetActive(inventory) && myPlayer.GetComponent<GUI_Inv>().stats == 40 && !NGUITools.GetActive(gameObject.GetComponent<Shops>().shop)){
 			NGUITools.SetActive (inventory, false);
+			checkAudio=false;
 		}
 		else if(Input.GetKeyDown(KeyCode.C) && !NGUITools.GetActive(inventory)){
 			NGUITools.SetActive (inventory, true);
@@ -475,8 +481,11 @@ public class HeroControllerScript : MonoBehaviour
 			}
 			TimerRegen=1.0f;
 		}
-		//
-		targetsInRange = targets.FindAll(bot =>((isFacingRight && Mathf.Abs(myPlayer.position.y-bot.position.y)<=1.2f && myPlayer.transform.position.x<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x+2.0f) || (!isFacingRight && myPlayer.transform.position.x-2.0f<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x)));
+		if (NGUITools.GetActive(statsMenu) && !checkAudio){
+			audio.PlayOneShot(gameObject.GetComponent<Sounds>().openPanel);
+			checkAudio=true;
+		}
+		//		
     }
 
     /// <summary>
@@ -511,6 +520,7 @@ public class HeroControllerScript : MonoBehaviour
 		if (NGUITools.GetActive (statsMenu)){
 			menuTimer=0.3f;
 			menuCheck=true;
+			audio.PlayOneShot(gameObject.GetComponent<Sounds>().closePanel);
 		}else{
 			menuCheck=false;
 			NGUITools.SetActive (statsMenu, true);
