@@ -51,10 +51,10 @@ public class Shops : MonoBehaviour {
 		gameObject.GetComponent<HeroControllerScript>().gold+=inv.all_items[sellItem].GetComponent<Items>()._price/2;
 		inv.all_items[sellItem]=null;
 		sellItem=-1;
+		NGUITools.SetActive(sellMenu,false);
 	}
 	void sellYes(){
-		sell();
-		NGUITools.SetActive(sellMenu,false);
+		sell();	
 		sellItem=-1;
 	}
 	void sellNo(){
