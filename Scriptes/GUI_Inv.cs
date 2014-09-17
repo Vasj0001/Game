@@ -125,13 +125,14 @@ public class GUI_Inv : MonoBehaviour {
 				if (inv.all_items[28]!=null && inv.stats20==false)
 					inv.all_items[28]=null;
 			}
-		}/*
+		}
 		if(mouseAtSlot!=40 && Input.GetMouseButtonDown(1) && inv.all_items[mouseAtSlot]!=null){
 			if(inv.all_items[mouseAtSlot].GetComponent<Items>().TypeItem == Items.type.Weapon){
 				if(inv.all_items[20]==null){
 					inv.all_items[20]=inv.all_items[mouseAtSlot];
 					inv.all_items[mouseAtSlot]=null;
 				}else{
+					start=1;
 					inv.all_items[25]=inv.all_items[20];
 					inv.all_items[20]=null;
 					inv.all_items[20]=inv.all_items[mouseAtSlot];
@@ -152,7 +153,7 @@ public class GUI_Inv : MonoBehaviour {
 					inv.all_items[25]=null;
 				}
 			}
-		}*/
+		}
 		//
 		if (mouseAtSlot!=40 && inv.all_items[mouseAtSlot]!=null && stats == 40){
 			if(eqStats.Count!=0){

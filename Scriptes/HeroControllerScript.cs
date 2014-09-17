@@ -66,6 +66,7 @@ public class HeroControllerScript : MonoBehaviour
 	private int VitalityTotal;
 	private int AgilityTotal;
 	private int IntelligenceTotal;
+	public int gold;
 	
 	public UISlider XP;
 	public UILabel XpText;
@@ -74,6 +75,7 @@ public class HeroControllerScript : MonoBehaviour
 	public UISlider MP;
 	public UILabel MPText;
 	public UILabel Level;
+	public UILabel goldL;
 	
 	public UILabel PointsL;
 	public UILabel DamageL;
@@ -107,7 +109,7 @@ public class HeroControllerScript : MonoBehaviour
 	public List<Transform> targetsDamagedFirstSkill;
 	public GameObject wave;
 	private float ttlFirstSkill=0.0f;
-	private bool isFacingRightFirstSkill;
+	private bool isFacingRightFirstSkill=true;
 	public GameObject fonFirstSkill;
 	public UILabel cdFirstSkillText;
 	//Second Skill
@@ -125,6 +127,10 @@ public class HeroControllerScript : MonoBehaviour
 	private AI AIscript;
 	private Items ItemsScript;
 	private bool block=true;
+	private float menuTimer=0;
+	public bool menuCheck=false;
+	public GameObject rightPartSys;
+	public GameObject leftPartSys;
 	
 	void Awake(){
 		myPlayer = transform;
@@ -232,8 +238,17 @@ public class HeroControllerScript : MonoBehaviour
 		if (Input.GetKey(KeyCode.F))
 			CurXP+=10;
 		TargetEnemy();
+		if (CurHealth>MaxHealth)
+			CurHealth=MaxHealth;
+		if (CurMana>MaxMana)
+			CurMana=MaxMana;
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
+		if (menuTimer>0){menuTimer-=Time.deltaTime;}
+		if (menuTimer<0){menuTimer=0;}
+		if (menuTimer==0 && menuCheck)
+			NGUITools.SetActive (statsMenu, false);
+			
 		if (firstSkillTimer>1){
 			firstSkillTimer-=Time.deltaTime;
 			cdFirstSkillText.text=(Mathf.Floor(firstSkillTimer)).ToString();
@@ -293,18 +308,31 @@ public class HeroControllerScript : MonoBehaviour
 			NGUITools.SetActive(fonFirstSkill,true);
 			wave.SetActive(true);
 			ttlFirstSkill=1.0f;
+			if(!isFacingRightFirstSkill){
+				Vector3 theScale = wave.transform.localScale;
+				theScale.x *= -1;
+				wave.transform.localScale = theScale;
+			}
 			isFacingRightFirstSkill=isFacingRight;
 			if(isFacingRightFirstSkill){
 				wave.transform.position=new Vector3(myPlayer.position.x+1,myPlayer.position.y,0);
+				rightPartSys.SetActive(true);
+				leftPartSys.SetActive(false);
 			}else{
+				rightPartSys.SetActive(false);
+				leftPartSys.SetActive(true);
+				Vector3 theScale = wave.transform.localScale;
+				theScale.x *= -1;
+				wave.transform.localScale = theScale;
+				isFacingRightFirstSkill=false;
 				wave.transform.position=new Vector3(myPlayer.position.x-1,myPlayer.position.y,0);
 			}
 		}
 		if (ttlFirstSkill>=0){
 			if(isFacingRightFirstSkill){
-				wave.transform.position += wave.transform.right * 8 * Time.deltaTime;
+				wave.transform.position += wave.transform.right * 7 * Time.deltaTime;
 			}else{
-				wave.transform.position -= wave.transform.right * 8 * Time.deltaTime;
+				wave.transform.position -= wave.transform.right * 7 * Time.deltaTime;
 			}
 			targetsInFirstSkill= targets.FindAll(bot => Mathf.Abs(bot.position.x-wave.transform.position.x)<=1.0f && Mathf.Abs(bot.position.y-wave.transform.position.y)<=0.6f);
 			foreach(Transform x in targetsInFirstSkill){
@@ -408,6 +436,7 @@ public class HeroControllerScript : MonoBehaviour
 		MPReg.text = ((int)ManaReg).ToString() + " mps";
 		DamageWW = Damage + _damageW;
 		DamageWWL.text = DamageWW.ToString();
+		goldL.text = gold.ToString();
 		
 		
 		if (CurXP>=MaxXP){
@@ -480,8 +509,10 @@ public class HeroControllerScript : MonoBehaviour
 	}
 	void stats(){
 		if (NGUITools.GetActive (statsMenu)){
-			NGUITools.SetActive (statsMenu, false);
+			menuTimer=0.3f;
+			menuCheck=true;
 		}else{
+			menuCheck=false;
 			NGUITools.SetActive (statsMenu, true);
 		}
 	}
@@ -537,6 +568,7 @@ public class HeroControllerScript : MonoBehaviour
 		save.WriteLine(transform.position.x);
 		save.WriteLine(transform.position.y);
 		save.WriteLine(transform.position.z);
+		save.WriteLine(gold);
 		save.WriteLine(CurXP);
 		save.WriteLine(MaxXP);
 		save.WriteLine(CurHealth);
@@ -563,6 +595,7 @@ public class HeroControllerScript : MonoBehaviour
 			x = System.Convert.ToSingle(load.ReadLine());
 			y = System.Convert.ToSingle(load.ReadLine());
 			z = System.Convert.ToSingle(load.ReadLine());
+			gold = System.Convert.ToInt32(load.ReadLine());
 			CurXP = System.Convert.ToInt32(load.ReadLine());
 			MaxXP = System.Convert.ToInt32(load.ReadLine());
 			CurHealth = System.Convert.ToInt32(load.ReadLine());

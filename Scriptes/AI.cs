@@ -60,7 +60,7 @@ public class AI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//testRect = new Rect(Screen.width/64.0f, Screen.height/3.763f,Screen.width-(Screen.width/64.0f+Screen.width/1.044f),Screen.height-(Screen.height/3.763f+Screen.height/1.457f));
+		//testRect = new Rect(Screen.width/1.143f, Screen.height/3.802f,Screen.width-(Screen.width/1.143f+Screen.width/10.052f),Screen.height-(Screen.height/3.802f+Screen.height/1.447f));
 		Debug.DrawLine(target.position, myTransform.position);
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}

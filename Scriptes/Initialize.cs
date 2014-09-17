@@ -6,6 +6,7 @@ public class Initialize : MonoBehaviour {
 	public GameObject sword1;
 	public GameObject armor1;
 	public GameObject armor2;
+	public GameObject quest1;
 
 
 	void Start(){
@@ -44,5 +45,16 @@ public class Initialize : MonoBehaviour {
 		} else {
 			Debug.Log("Max inv");
 		}*/
+		for (int i=0; i<=3; i++) {
+			if ((inv.all_items[i] == null) && (quest1.GetComponent<Items>().state == false)) {
+				inv.all_items[i] = quest1.GetComponent<Items>().ItemObject;
+				quest1.GetComponent<Items>().state = true;
+			}
+		}
+		if (quest1.GetComponent<Items>().state) {
+			Destroy(quest1);
+		} else {
+			Debug.Log("Max inv");
+		}
 	}
 }
