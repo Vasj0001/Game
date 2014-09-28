@@ -38,10 +38,10 @@ public class HeroControllerScript : MonoBehaviour
 	public GameObject statsMenu;
 	public GameObject openMenu;
 	
-	private int LVL;
+	public int LVL;
 	private string Class;
-	private int MaxXP;
-	private int CurXP;
+	public int MaxXP;
+	public int CurXP;
 	private int MaxHealth; // Максимальное количество здоровья
 	private int CurHealth; // Текущее количество здоровья
 	private int MaxMana; // Максимально количество маны
@@ -66,6 +66,7 @@ public class HeroControllerScript : MonoBehaviour
 	private int VitalityTotal;
 	private int AgilityTotal;
 	private int IntelligenceTotal;
+	public int gold;
 	
 	public UISlider XP;
 	public UILabel XpText;
@@ -74,6 +75,7 @@ public class HeroControllerScript : MonoBehaviour
 	public UISlider MP;
 	public UILabel MPText;
 	public UILabel Level;
+	public UILabel goldL;
 	
 	public UILabel PointsL;
 	public UILabel DamageL;
@@ -107,7 +109,7 @@ public class HeroControllerScript : MonoBehaviour
 	public List<Transform> targetsDamagedFirstSkill;
 	public GameObject wave;
 	private float ttlFirstSkill=0.0f;
-	private bool isFacingRightFirstSkill;
+	private bool isFacingRightFirstSkill=true;
 	public GameObject fonFirstSkill;
 	public UILabel cdFirstSkillText;
 	//Second Skill
@@ -121,12 +123,16 @@ public class HeroControllerScript : MonoBehaviour
 	public UILabel cdSecondSkillText;
 	//
 	public Transform selectedTarget;
-	public GameObject expInfoPanel;
-	public UILabel expInfoLabel;
 	private GameObject[] enemies;
 	private AI AIscript;
 	private Items ItemsScript;
 	private bool block=true;
+	private float menuTimer=0;
+	public bool menuCheck=false;
+	public GameObject rightPartSys;
+	public GameObject leftPartSys;
+	//Sounds
+	private bool checkAudio=false;
 	
 	void Awake(){
 		myPlayer = transform;
@@ -230,12 +236,24 @@ public class HeroControllerScript : MonoBehaviour
 
     private void Update()
     {	
+		targetsInRange = targets.FindAll(bot =>((isFacingRight && Mathf.Abs(myPlayer.position.y-bot.position.y)<=1.2f && myPlayer.transform.position.x<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x+2.0f) || (!isFacingRight && myPlayer.transform.position.x-2.0f<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x)));
 		//Debug.Log(_damageW);
 		if (Input.GetKey(KeyCode.F))
 			CurXP+=10;
 		TargetEnemy();
+		if (CurHealth>MaxHealth)
+			CurHealth=MaxHealth;
+		if (CurMana>MaxMana)
+			CurMana=MaxMana;
 		if (attackTimer>0){attackTimer-=Time.deltaTime;}
 		if (attackTimer<0){attackTimer=0;}
+		if (menuTimer>0){menuTimer-=Time.deltaTime;}
+		if (menuTimer<0){menuTimer=0;}
+		if (menuTimer==0 && menuCheck){
+			NGUITools.SetActive (statsMenu, false);
+			checkAudio=false;
+		}
+			
 		if (firstSkillTimer>1){
 			firstSkillTimer-=Time.deltaTime;
 			cdFirstSkillText.text=(Mathf.Floor(firstSkillTimer)).ToString();
@@ -295,18 +313,31 @@ public class HeroControllerScript : MonoBehaviour
 			NGUITools.SetActive(fonFirstSkill,true);
 			wave.SetActive(true);
 			ttlFirstSkill=1.0f;
+			if(!isFacingRightFirstSkill){
+				Vector3 theScale = wave.transform.localScale;
+				theScale.x *= -1;
+				wave.transform.localScale = theScale;
+			}
 			isFacingRightFirstSkill=isFacingRight;
 			if(isFacingRightFirstSkill){
 				wave.transform.position=new Vector3(myPlayer.position.x+1,myPlayer.position.y,0);
+				rightPartSys.SetActive(true);
+				leftPartSys.SetActive(false);
 			}else{
+				rightPartSys.SetActive(false);
+				leftPartSys.SetActive(true);
+				Vector3 theScale = wave.transform.localScale;
+				theScale.x *= -1;
+				wave.transform.localScale = theScale;
+				isFacingRightFirstSkill=false;
 				wave.transform.position=new Vector3(myPlayer.position.x-1,myPlayer.position.y,0);
 			}
 		}
 		if (ttlFirstSkill>=0){
 			if(isFacingRightFirstSkill){
-				wave.transform.position += wave.transform.right * 8 * Time.deltaTime;
+				wave.transform.position += wave.transform.right * 7 * Time.deltaTime;
 			}else{
-				wave.transform.position -= wave.transform.right * 8 * Time.deltaTime;
+				wave.transform.position -= wave.transform.right * 7 * Time.deltaTime;
 			}
 			targetsInFirstSkill= targets.FindAll(bot => Mathf.Abs(bot.position.x-wave.transform.position.x)<=1.0f && Mathf.Abs(bot.position.y-wave.transform.position.y)<=0.6f);
 			foreach(Transform x in targetsInFirstSkill){
@@ -359,8 +390,9 @@ public class HeroControllerScript : MonoBehaviour
 		}
 		//
 		//
-		if (Input.GetKeyDown(KeyCode.C) && NGUITools.GetActive(inventory) && myPlayer.GetComponent<GUI_Inv>().stats == 40){
+		if (Input.GetKeyDown(KeyCode.C) && NGUITools.GetActive(inventory) && myPlayer.GetComponent<GUI_Inv>().stats == 40 && !NGUITools.GetActive(gameObject.GetComponent<Shops>().shop)){
 			NGUITools.SetActive (inventory, false);
+			checkAudio=false;
 		}
 		else if(Input.GetKeyDown(KeyCode.C) && !NGUITools.GetActive(inventory)){
 			NGUITools.SetActive (inventory, true);
@@ -410,6 +442,7 @@ public class HeroControllerScript : MonoBehaviour
 		MPReg.text = ((int)ManaReg).ToString() + " mps";
 		DamageWW = Damage + _damageW;
 		DamageWWL.text = DamageWW.ToString();
+		goldL.text = gold.ToString();
 		
 		
 		if (CurXP>=MaxXP){
@@ -448,12 +481,11 @@ public class HeroControllerScript : MonoBehaviour
 			}
 			TimerRegen=1.0f;
 		}
-		//
-		if (NGUITools.GetActive(expInfoPanel)){
-			expInfoLabel.text="To obtain level "+(LVL+1).ToString()+ " left "+ (MaxXP-CurXP).ToString() + "XP";
-			expInfoPanel.transform.localPosition=new Vector3(Input.mousePosition.x+80,Input.mousePosition.y-900,0);
+		if (NGUITools.GetActive(statsMenu) && !checkAudio){
+			audio.PlayOneShot(gameObject.GetComponent<Sounds>().openPanel);
+			checkAudio=true;
 		}
-		targetsInRange = targets.FindAll(bot =>((isFacingRight && Mathf.Abs(myPlayer.position.y-bot.position.y)<=1.2f && myPlayer.transform.position.x<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x+2.0f) || (!isFacingRight && myPlayer.transform.position.x-2.0f<=bot.transform.position.x && bot.transform.position.x<=myPlayer.transform.position.x)));
+		//		
     }
 
     /// <summary>
@@ -486,8 +518,11 @@ public class HeroControllerScript : MonoBehaviour
 	}
 	void stats(){
 		if (NGUITools.GetActive (statsMenu)){
-			NGUITools.SetActive (statsMenu, false);
+			menuTimer=0.3f;
+			menuCheck=true;
+			audio.PlayOneShot(gameObject.GetComponent<Sounds>().closePanel);
 		}else{
+			menuCheck=false;
 			NGUITools.SetActive (statsMenu, true);
 		}
 	}
@@ -527,14 +562,6 @@ public class HeroControllerScript : MonoBehaviour
 				AIscript.AddJustCurrHealth(-DamageWW);
 		}
 	}
-	void expInfoT(){
-//		Debug.Log(Input.mousePosition);
-//		Debug.Log(expInfoPanel.transform.localPosition);
-		NGUITools.SetActive(expInfoPanel,true);
-	}
-	void expInfoF(){
-		NGUITools.SetActive(expInfoPanel,false);
-	}
 	
 	void blockClick(){
 		block=true;
@@ -551,6 +578,7 @@ public class HeroControllerScript : MonoBehaviour
 		save.WriteLine(transform.position.x);
 		save.WriteLine(transform.position.y);
 		save.WriteLine(transform.position.z);
+		save.WriteLine(gold);
 		save.WriteLine(CurXP);
 		save.WriteLine(MaxXP);
 		save.WriteLine(CurHealth);
@@ -577,6 +605,7 @@ public class HeroControllerScript : MonoBehaviour
 			x = System.Convert.ToSingle(load.ReadLine());
 			y = System.Convert.ToSingle(load.ReadLine());
 			z = System.Convert.ToSingle(load.ReadLine());
+			gold = System.Convert.ToInt32(load.ReadLine());
 			CurXP = System.Convert.ToInt32(load.ReadLine());
 			MaxXP = System.Convert.ToInt32(load.ReadLine());
 			CurHealth = System.Convert.ToInt32(load.ReadLine());

@@ -13,6 +13,7 @@ public class AI : MonoBehaviour
 	public int moveSpeed=1;
 	public int MaxHp;
 	public int CurHp;
+<<<<<<< HEAD
 
     public int Wherep=1;
     public bool Scanp;
@@ -36,6 +37,70 @@ public class AI : MonoBehaviour
     void Update () 
     {
         Where();
+=======
+	public int Dmg;
+	private float cd;
+	private float attackTimer;
+	int attackHash = Animator.StringToHash("Attack_Pump");
+	public GameObject HPEnemyBar;
+	private float HPBarLeng;
+	public	GUISkin myBar;
+	public int height;
+	public int width;
+	public bool life=true;
+	private float timerLife=0;
+	private float timerDeath=0;
+	private bool check=true;
+	//private Rect testRect;
+
+	private HeroControllerScript HS;
+	public List<Transform> moblist;
+	
+	// Use this for initialization
+	void Awake(){
+		myTransform = transform;
+	}
+	
+	void Start () {
+		attackTimer = 0;
+		cd = 2.0f;
+		GameObject go = GameObject.FindGameObjectWithTag("Player");
+		target = go.transform;
+		anim = GetComponent<Animator>();
+		HS = target.GetComponent<HeroControllerScript>();
+	}
+	
+	private void FixedUpdate(){
+		pointA = blockCheck.position;
+		pointB.x = blockCheck.position.x + 0.9f;
+		pointB.y = blockCheck.position.y + 0.2f;
+		isBlocked = Physics2D.OverlapArea(pointA, pointB, whatIsBlock);
+		anim.SetBool ("Block", isBlocked);
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		//testRect = new Rect(Screen.width/1.143f, Screen.height/3.802f,Screen.width-(Screen.width/1.143f+Screen.width/10.052f),Screen.height-(Screen.height/3.802f+Screen.height/1.447f));
+		Debug.DrawLine(target.position, myTransform.position);
+		if (attackTimer>0){attackTimer-=Time.deltaTime;}
+		if (attackTimer<0){attackTimer=0;}
+		if (timerLife>0)
+			timerLife-=Time.deltaTime;
+		if (timerLife<0){timerLife=0;}
+		if (timerDeath>0){timerDeath-=Time.deltaTime;}
+		if (timerDeath<0){timerDeath=0;}
+		
+		if (myTransform.position.y>target.position.y){
+			myTransform.position = new Vector3(myTransform.position.x,myTransform.position.y, 1);
+		}else{
+			myTransform.position = new Vector3(myTransform.position.x,myTransform.position.y, -1);
+		}
+		if (CurHp>0){
+			if (Vector2.Distance(myTransform.position,target.position) < range && ((float)((int)(Vector2.Distance(myTransform.position,target.position)*10.0f))/10.0f > 1.2f))
+			{
+				anim.SetBool("Walk", true);
+				//Debug.Log(Vector3.Distance(myTransform.position,target.position));
+>>>>>>> origin/master
 
        // Debug.Log(Wherep);
         Debug.DrawLine(transform.position, new Vector2(transform.position.x+3,transform.position.y+3));
@@ -44,6 +109,7 @@ public class AI : MonoBehaviour
         Debug.DrawLine(transform.position, new Vector2(transform.position.x-3,transform.position.y+3));
 
 
+<<<<<<< HEAD
     }
  
     /*Now you will need to override the methods you want to use for the enemy, these can be
@@ -115,6 +181,58 @@ public class AI : MonoBehaviour
 
     public void AddJustCurrHealth(int add)
     {
+=======
+			
+			}
+			else
+			{
+				anim.SetBool("Walk", false);
+			}
+			//if (isBlocked){
+			//	anim.SetBool("Block", false);
+			//	isBlocked=false;
+			//	rigidbody2D.AddForce(new Vector2(0, 150));
+			//}
+			if (Vector2.Distance(myTransform.position,target.position) <= 1.3f){
+				anim.SetBool("Walk", false);
+				if (attackTimer==0){
+					Damage();
+					attackTimer=cd;
+				}
+			}
+		}else{
+			anim.SetBool("Walk", false);
+			if (check){
+				timerDeath=1.0f;
+				timerLife=0.2f;
+				check=false;
+			}
+			if(timerLife==0)
+				life=false;
+			if (timerDeath==0)
+				gameObject.SetActive(false);			
+		}
+		HPBarLeng = (float)CurHp/(float)MaxHp;	
+	}
+	
+	void OnGUI(){
+		GUI.skin = myBar;
+		Vector3 screenPosition = Camera.main.WorldToScreenPoint(myTransform.position);
+		Rect position = new Rect(screenPosition.x - width, Screen.height - screenPosition.y - height, 60f, 15f);
+		GUI.Box(new Rect(screenPosition.x - width, Screen.height - screenPosition.y - height, 60f*HPBarLeng, 15f), " ", GUI.skin.GetStyle("fon")); 
+		GUI.TextField(position, CurHp + "/" + MaxHp, 20);
+		GUI.Box(position, " ", GUI.skin.GetStyle("Bar"));
+		//GUI.Box(testRect, "");
+	}
+	
+	void Damage(){
+		anim.SetTrigger(attackHash);
+		HeroControllerScript hs = (HeroControllerScript)target.GetComponent("HeroControllerScript");
+		hs.AddJustCurrHealth(-Dmg);
+	}
+	
+	public void AddJustCurrHealth(int add){
+>>>>>>> origin/master
 		CurHp+=add;
 		if (CurHp<0){CurHp=0;}
 		if (CurHp>MaxHp){CurHp=MaxHp;}
